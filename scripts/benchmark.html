@@ -1,0 +1,945 @@
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Benchmark — Performance Monitor</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg:       #08090c;
+  --bg2:      #0f1117;
+  --bg3:      #161b24;
+  --bg4:      #1e2535;
+  --border:   rgba(255,255,255,0.06);
+  --border2:  rgba(255,255,255,0.11);
+  --text:     #e8eaf0;
+  --text2:    #8892a4;
+  --text3:    #485263;
+  --continente: #e63946;
+  --auchan:     #f77f00;
+  --pingodoce:  #2a9d8f;
+  --elcorteingles: #4a90d9;
+
+  --good:   #22c55e;
+  --warn:   #f59e0b;
+  --bad:    #ef4444;
+  --good-bg:  rgba(34,197,94,0.08);
+  --warn-bg:  rgba(245,158,11,0.08);
+  --bad-bg:   rgba(239,68,68,0.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 13px;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  display: flex; align-items: center;
+  padding: 0 28px; height: 56px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+  position: sticky; top: 0; z-index: 100;
+  gap: 10px;
+}
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800; font-size: 16px;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #e8eaf0 0%, #8892a4 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.logo span { color: var(--continente); -webkit-text-fill-color: var(--continente); }
+.topbar-sep { flex: 1; }
+
+.strategy-toggle {
+  display: flex; background: var(--bg3);
+  border: 1px solid var(--border2); border-radius: 8px;
+  overflow: hidden;
+}
+.strat-btn {
+  padding: 6px 16px; border: none; background: transparent;
+  color: var(--text2); font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; font-weight: 500; cursor: pointer;
+  transition: all 0.15s; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.strat-btn.active { background: var(--bg4); color: var(--text); }
+
+.date-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; color: var(--text3);
+  background: var(--bg3); padding: 5px 12px;
+  border-radius: 6px; border: 1px solid var(--border);
+}
+
+/* ── TABS ── */
+.tabs {
+  display: flex; gap: 0;
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+  background: var(--bg2);
+}
+.tab-btn {
+  padding: 14px 20px;
+  border: none; background: transparent;
+  color: var(--text2); font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px; font-weight: 400; cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s; white-space: nowrap;
+  margin-bottom: -1px;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--text); border-bottom-color: var(--continente); font-weight: 500; }
+
+/* ── LAYOUT ── */
+.page { display: none; padding: 28px; max-width: 1400px; margin: 0 auto; }
+.page.active { display: block; }
+
+/* ── SECTION HEADER ── */
+.section-header {
+  display: flex; align-items: baseline;
+  gap: 12px; margin-bottom: 20px;
+}
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px; font-weight: 700;
+  letter-spacing: -0.3px;
+}
+.section-sub { font-size: 12px; color: var(--text3); }
+
+/* ── SITE LEGEND ── */
+.site-legend {
+  display: flex; gap: 20px; margin-bottom: 28px; flex-wrap: wrap;
+}
+.legend-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 500;
+}
+.legend-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.legend-own { font-size: 10px; background: rgba(230,57,70,0.15); color: var(--continente); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(230,57,70,0.3); }
+
+/* ── SCORE GRID ── */
+.score-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px; margin-bottom: 28px;
+}
+.score-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  position: relative; overflow: hidden;
+  transition: border-color 0.2s;
+}
+.score-card.own-site {
+  border-color: rgba(230,57,70,0.3);
+  background: linear-gradient(135deg, rgba(230,57,70,0.05) 0%, var(--bg2) 60%);
+}
+.score-card:hover { border-color: var(--border2); }
+.score-card-site {
+  font-size: 11px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: 0.5px; margin-bottom: 14px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.score-ring-wrap {
+  display: flex; align-items: center; gap: 16px; margin-bottom: 16px;
+}
+.score-ring {
+  width: 64px; height: 64px; flex-shrink: 0;
+}
+.score-metrics { flex: 1; }
+.score-metric-row {
+  display: flex; justify-content: space-between;
+  align-items: center; padding: 3px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+}
+.score-metric-row:last-child { border-bottom: none; }
+.score-metric-label { color: var(--text2); font-family: 'IBM Plex Mono', monospace; }
+.score-metric-val { font-weight: 500; font-family: 'IBM Plex Mono', monospace; }
+.val-good { color: var(--good); }
+.val-warn { color: var(--warn); }
+.val-bad  { color: var(--bad); }
+
+/* ── PAGE TABS ── */
+.page-filter {
+  display: flex; gap: 6px; margin-bottom: 20px;
+}
+.pf-btn {
+  padding: 6px 14px; border-radius: 6px;
+  border: 1px solid var(--border2);
+  background: transparent; color: var(--text2);
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+  font-weight: 500; cursor: pointer; transition: all 0.15s;
+  text-transform: uppercase; letter-spacing: 0.3px;
+}
+.pf-btn:hover { background: var(--bg3); color: var(--text); }
+.pf-btn.active { background: var(--bg4); border-color: var(--border2); color: var(--text); }
+
+/* ── METRICS TABLE ── */
+.metrics-table {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+.mt-header {
+  display: grid;
+  grid-template-columns: 160px repeat(7, 1fr);
+  padding: 10px 16px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; font-weight: 500;
+  color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px;
+}
+.mt-row {
+  display: grid;
+  grid-template-columns: 160px repeat(7, 1fr);
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+}
+.mt-row:last-child { border-bottom: none; }
+.mt-row:hover { background: var(--bg3); }
+.mt-site-name {
+  font-weight: 500; font-size: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.site-color-bar {
+  width: 3px; height: 20px; border-radius: 2px; flex-shrink: 0;
+}
+.mt-val {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px; font-weight: 500;
+  text-align: center;
+}
+.perf-score-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 24px; border-radius: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px; font-weight: 600;
+}
+.badge-good { background: var(--good-bg); color: var(--good); }
+.badge-warn { background: var(--warn-bg); color: var(--warn); }
+.badge-bad  { background: var(--bad-bg);  color: var(--bad); }
+
+/* ── CHARTS ── */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px; margin-bottom: 28px;
+}
+.chart-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+.chart-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px; font-weight: 600;
+  margin-bottom: 4px;
+}
+.chart-sub { font-size: 11px; color: var(--text3); margin-bottom: 16px; }
+.chart-wrap { position: relative; height: 200px; }
+
+/* ── HISTORY ── */
+.history-controls {
+  display: flex; gap: 12px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;
+}
+.history-metric-select {
+  padding: 7px 12px; background: var(--bg3);
+  border: 1px solid var(--border2); border-radius: 8px;
+  color: var(--text); font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; cursor: pointer; outline: none;
+}
+.history-metric-select option { background: var(--bg3); }
+.history-chart-wrap { position: relative; height: 300px; }
+.history-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px;
+}
+
+/* ── RANKING ── */
+.ranking-list { display: flex; flex-direction: column; gap: 10px; }
+.ranking-row {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 18px;
+}
+.ranking-pos {
+  font-family: 'Syne', sans-serif; font-size: 22px;
+  font-weight: 800; color: var(--text3);
+  width: 28px; text-align: center; flex-shrink: 0;
+}
+.ranking-pos.pos-1 { color: #f5c842; }
+.ranking-pos.pos-2 { color: #a8b2c0; }
+.ranking-pos.pos-3 { color: #cd7c3a; }
+.ranking-name { font-weight: 500; font-size: 14px; flex: 1; }
+.ranking-own-tag { font-size: 10px; color: var(--continente); background: rgba(230,57,70,0.12); padding: 2px 7px; border-radius: 4px; }
+.ranking-score-group { display: flex; gap: 8px; }
+
+/* ── EMPTY / LOADING ── */
+.loading-state {
+  text-align: center; padding: 80px 20px; color: var(--text3);
+}
+.loading-spinner {
+  width: 32px; height: 32px; border: 2px solid var(--border2);
+  border-top-color: var(--continente); border-radius: 50%;
+  animation: spin 0.8s linear infinite; margin: 0 auto 16px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── CONFIG MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: 16px; padding: 28px; width: 560px; max-width: 95vw;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.7);
+  transform: translateY(8px); transition: transform 0.2s;
+}
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+.modal-sub { font-size: 13px; color: var(--text2); margin-bottom: 24px; line-height: 1.6; }
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; font-size: 11px; font-weight: 500; color: var(--text2); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; font-family: 'IBM Plex Mono', monospace; }
+.form-input {
+  width: 100%; background: var(--bg3); border: 1px solid var(--border2);
+  border-radius: 8px; color: var(--text); font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px; padding: 9px 12px; outline: none; transition: border-color 0.15s;
+}
+.form-input:focus { border-color: var(--continente); }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; }
+.btn {
+  padding: 8px 18px; border-radius: 8px; border: 1px solid var(--border2);
+  background: var(--bg3); color: var(--text); font-family: 'IBM Plex Sans', monospace;
+  font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s;
+}
+.btn:hover { background: var(--bg4); }
+.btn.primary { background: var(--continente); border-color: var(--continente); color: #fff; }
+.btn.primary:hover { opacity: 0.9; }
+
+.step-list { counter-reset: steps; }
+.step-item {
+  counter-increment: steps;
+  display: flex; gap: 12px; margin-bottom: 14px;
+  font-size: 13px; line-height: 1.6; color: var(--text2);
+}
+.step-item::before {
+  content: counter(steps);
+  min-width: 22px; height: 22px; border-radius: 50%;
+  background: var(--bg4); border: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+  font-weight: 600; color: var(--text); flex-shrink: 0; margin-top: 1px;
+}
+code {
+  font-family: 'IBM Plex Mono', monospace;
+  background: var(--bg4); padding: 1px 6px; border-radius: 4px;
+  font-size: 12px; color: var(--text);
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">Perf<span>.</span>Bench</div>
+  <div class="topbar-sep"></div>
+  <div class="strategy-toggle">
+    <button class="strat-btn active" onclick="setStrategy('mobile',this)">Mobile</button>
+    <button class="strat-btn" onclick="setStrategy('desktop',this)">Desktop</button>
+  </div>
+  <div class="date-badge" id="date-badge">—</div>
+  <button class="btn" onclick="openSetup()" style="font-size:12px">⚙ Configurar</button>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('overview',this)">Visão Geral</button>
+  <button class="tab-btn" onclick="showTab('detail',this)">Métricas Detalhadas</button>
+  <button class="tab-btn" onclick="showTab('history',this)">Histórico</button>
+  <button class="tab-btn" onclick="showTab('ranking',this)">Ranking</button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE: OVERVIEW
+══════════════════════════════════════════════════════ -->
+<div class="page active" id="page-overview">
+  <div style="margin-bottom:20px">
+    <div class="section-header">
+      <div class="section-title">Performance Score</div>
+      <div class="section-sub">Índice geral Google PageSpeed (0–100)</div>
+    </div>
+    <div class="site-legend" id="overview-legend"></div>
+  </div>
+
+  <div class="page-filter" id="overview-page-filter"></div>
+  <div class="score-grid" id="score-grid"></div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Core Web Vitals — LCP</div>
+      <div class="chart-sub">Largest Contentful Paint (ms) — menor é melhor</div>
+      <div class="chart-wrap"><canvas id="chart-lcp"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Core Web Vitals — CLS</div>
+      <div class="chart-sub">Cumulative Layout Shift — menor é melhor</div>
+      <div class="chart-wrap"><canvas id="chart-cls"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Time to Interactive</div>
+      <div class="chart-sub">TTI (ms) — quando a página fica totalmente interativa</div>
+      <div class="chart-wrap"><canvas id="chart-tti"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">First Contentful Paint</div>
+      <div class="chart-sub">FCP (ms) — primeiro conteúdo visível</div>
+      <div class="chart-wrap"><canvas id="chart-fcp"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE: DETAIL
+══════════════════════════════════════════════════════ -->
+<div class="page" id="page-detail">
+  <div class="section-header">
+    <div class="section-title">Métricas Detalhadas</div>
+    <div class="section-sub">Todos os indicadores por página e site</div>
+  </div>
+  <div class="page-filter" id="detail-page-filter"></div>
+  <div class="metrics-table" id="metrics-table">
+    <div class="mt-header">
+      <div>Site</div>
+      <div style="text-align:center">Perf.</div>
+      <div style="text-align:center">LCP</div>
+      <div style="text-align:center">FCP</div>
+      <div style="text-align:center">TTI</div>
+      <div style="text-align:center">TBT</div>
+      <div style="text-align:center">CLS</div>
+      <div style="text-align:center">SI</div>
+    </div>
+    <div id="metrics-table-body"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE: HISTORY
+══════════════════════════════════════════════════════ -->
+<div class="page" id="page-history">
+  <div class="section-header">
+    <div class="section-title">Evolução Histórica</div>
+    <div class="section-sub">Acompanha a evolução dos sites ao longo do tempo</div>
+  </div>
+
+  <div class="history-controls">
+    <div class="page-filter" id="history-page-filter" style="margin-bottom:0"></div>
+    <select class="history-metric-select" id="history-metric" onchange="renderHistory()">
+      <option value="performanceScore">Performance Score</option>
+      <option value="lcp">LCP (ms)</option>
+      <option value="fcp">FCP (ms)</option>
+      <option value="tti">TTI (ms)</option>
+      <option value="tbt">TBT (ms)</option>
+      <option value="cls">CLS</option>
+    </select>
+  </div>
+
+  <div class="history-card">
+    <div class="history-chart-wrap"><canvas id="chart-history"></canvas></div>
+  </div>
+  <div style="margin-top:16px; font-size:12px; color:var(--text3); font-family:'IBM Plex Mono',monospace;" id="history-status"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE: RANKING
+══════════════════════════════════════════════════════ -->
+<div class="page" id="page-ranking">
+  <div class="section-header">
+    <div class="section-title">Ranking Competitivo</div>
+    <div class="section-sub">Posição relativa por métrica</div>
+  </div>
+  <div class="page-filter" id="ranking-page-filter"></div>
+  <div id="ranking-content"></div>
+</div>
+
+<!-- SETUP MODAL -->
+<div class="modal-overlay" id="modal-setup">
+  <div class="modal">
+    <div class="modal-title">Configurar Fonte de Dados</div>
+    <div class="modal-sub">
+      Para ver dados reais, o GitHub Actions tem de estar configurado e a correr. Segue os passos abaixo.
+    </div>
+
+    <div class="step-list">
+      <div class="step-item">Cria uma conta em <code>github.com</code> e um repositório público chamado <code>perf-benchmark</code></div>
+      <div class="step-item">Obtém a tua chave da PageSpeed API em <code>console.cloud.google.com</code> → APIs → PageSpeed Insights API → Credenciais</div>
+      <div class="step-item">No GitHub, vai a Settings → Secrets → Actions → New secret. Chama-lhe <code>PAGESPEED_API_KEY</code> e cola a chave</div>
+      <div class="step-item">Faz upload dos ficheiros <code>scripts/run-benchmark.js</code> e <code>.github/workflows/daily-benchmark.yml</code> para o repositório</div>
+      <div class="step-item">Vai a Actions → Daily Performance Benchmark → Run workflow para correr manualmente a primeira vez</div>
+      <div class="step-item">Cola abaixo o URL do teu repositório GitHub (para carregarmos os dados)</div>
+    </div>
+
+    <div class="form-group" style="margin-top:20px">
+      <label class="form-label">URL do repositório GitHub (raw)</label>
+      <input class="form-input" id="repo-url" placeholder="https://raw.githubusercontent.com/SEU-USER/perf-benchmark/main">
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeSetup()">Fechar</button>
+      <button class="btn" onclick="loadDemoData()" style="border-color:rgba(245,158,11,0.4);color:var(--warn)">Carregar dados demo</button>
+      <button class="btn primary" onclick="saveConfig()">Ligar ao GitHub</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── STATE ────────────────────────────────────────────────────────────────
+
+const SITES = [
+  { id: 'continente',     name: 'Continente',     color: '#e63946', isOwn: true },
+  { id: 'auchan',         name: 'Auchan',          color: '#f77f00', isOwn: false },
+  { id: 'pingodoce',      name: 'Pingo Doce',      color: '#2a9d8f', isOwn: false },
+  { id: 'elcorteingles',  name: 'El Corte Inglés', color: '#4a90d9', isOwn: false }
+];
+
+const PAGES = [
+  { id: 'homepage', label: 'Homepage' },
+  { id: 'category', label: 'Categoria' },
+  { id: 'pdp',      label: 'Produto' },
+  { id: 'cart',     label: 'Carrinho' }
+];
+
+const METRIC_LABELS = {
+  performanceScore: 'Performance', lcp: 'LCP (ms)', fcp: 'FCP (ms)',
+  tti: 'TTI (ms)', tbt: 'TBT (ms)', cls: 'CLS', si: 'Speed Index'
+};
+
+let strategy = 'mobile';
+let selectedPage = 'homepage';
+let historyPage = 'homepage';
+let latestData = null;
+let historyData = [];
+let chartInstances = {};
+let repoUrl = localStorage.getItem('bench_repo_url') || '';
+
+// ─── INIT ─────────────────────────────────────────────────────────────────
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildPageFilters();
+  if (repoUrl) {
+    document.getElementById('repo-url').value = repoUrl;
+    fetchLatest();
+  } else {
+    loadDemoData();
+  }
+});
+
+// ─── PAGE FILTERS ─────────────────────────────────────────────────────────
+
+function buildPageFilters() {
+  ['overview','detail','ranking'].forEach(tab => {
+    const el = document.getElementById(`${tab}-page-filter`);
+    el.innerHTML = PAGES.map((p,i) =>
+      `<button class="pf-btn${i===0?' active':''}" data-tab="${tab}" data-page="${p.id}" onclick="setPage('${p.id}','${tab}',this)">${p.label}</button>`
+    ).join('');
+  });
+  const hpf = document.getElementById('history-page-filter');
+  hpf.innerHTML = PAGES.map((p,i) =>
+    `<button class="pf-btn${i===0?' active':''}" data-tab="history" data-page="${p.id}" onclick="setHistoryPage('${p.id}',this)">${p.label}</button>`
+  ).join('');
+}
+
+function setPage(page, tab, el) {
+  selectedPage = page;
+  document.querySelectorAll(`[data-tab="${tab}"]`).forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+function setHistoryPage(page, el) {
+  historyPage = page;
+  document.querySelectorAll('[data-tab="history"]').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderHistory();
+}
+
+// ─── NAVIGATION ───────────────────────────────────────────────────────────
+
+function showTab(id, el) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  el.classList.add('active');
+  if (id === 'history') renderHistory();
+  if (id === 'ranking') renderRanking();
+}
+
+function setStrategy(s, el) {
+  strategy = s;
+  document.querySelectorAll('.strat-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+// ─── FETCH DATA ───────────────────────────────────────────────────────────
+
+async function fetchLatest() {
+  if (!repoUrl) return;
+  try {
+    const url = repoUrl.replace(/\/$/, '') + '/data/latest.json';
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    latestData = await res.json();
+    document.getElementById('date-badge').textContent = latestData.date;
+    render();
+    fetchHistory();
+  } catch (e) {
+    console.warn('Could not fetch data:', e.message);
+    loadDemoData();
+  }
+}
+
+async function fetchHistory() {
+  if (!repoUrl) return;
+  try {
+    const indexUrl = repoUrl.replace(/\/$/, '') + '/data/index.json';
+    const res = await fetch(indexUrl);
+    if (!res.ok) return;
+    const index = await res.json();
+
+    historyData = [];
+    // Load last 30 days
+    const recent = index.slice(0, 30);
+    for (const entry of recent.reverse()) {
+      try {
+        const r = await fetch(repoUrl.replace(/\/$/, '') + '/data/' + entry.file);
+        if (r.ok) historyData.push(await r.json());
+      } catch(e) {}
+    }
+    document.getElementById('history-status').textContent =
+      `${historyData.length} leitura(s) carregadas • última atualização: ${latestData?.date || '—'}`;
+  } catch(e) {}
+}
+
+// ─── DEMO DATA ────────────────────────────────────────────────────────────
+
+function loadDemoData() {
+  const today = new Date().toISOString().split('T')[0];
+  latestData = generateSnapshot(today);
+  document.getElementById('date-badge').textContent = today + ' (demo)';
+
+  // Generate 14 days of history
+  historyData = [];
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const dateStr = d.toISOString().split('T')[0];
+    historyData.push(generateSnapshot(dateStr, i));
+  }
+  document.getElementById('history-status').textContent =
+    `Dados de demonstração — 14 dias • Liga ao teu repositório GitHub para ver dados reais`;
+  render();
+  closeSetup();
+}
+
+function generateSnapshot(date, dayOffset = 0) {
+  const seed = (str) => str.split('').reduce((a,c)=>a+c.charCodeAt(0),0);
+  const rng = (base, variance, s) => Math.round(base + (((seed(date+s) % 100) / 100) - 0.5) * variance);
+
+  const bases = {
+    continente:    { perf: 62, lcp: 3200, fcp: 1800, tti: 5500, tbt: 380, cls: 0.08, si: 3800 },
+    auchan:        { perf: 55, lcp: 3800, fcp: 2100, tti: 6800, tbt: 520, cls: 0.12, si: 4200 },
+    pingodoce:     { perf: 48, lcp: 4600, fcp: 2600, tti: 8200, tbt: 680, cls: 0.18, si: 5500 },
+    elcorteingles: { perf: 71, lcp: 2600, fcp: 1500, tti: 4200, tbt: 220, cls: 0.05, si: 2900 },
+  };
+
+  // Slight trend: continente improving over time
+  const trend = { continente: dayOffset * 0.3, auchan: 0, pingodoce: 0, elcorteingles: 0 };
+
+  const snap = { date, timestamp: date + 'T07:00:00Z', sites: {} };
+  for (const site of SITES) {
+    const b = bases[site.id];
+    snap.sites[site.id] = { name: site.name, pages: {} };
+    for (const pg of PAGES) {
+      const pgMult = { homepage: 1, category: 1.1, pdp: 0.95, cart: 1.2 };
+      const m = pgMult[pg.id];
+      snap.sites[site.id].pages[pg.id] = {};
+      for (const strat of ['mobile','desktop']) {
+        const sm = strat === 'desktop' ? 0.75 : 1;
+        const t = trend[site.id];
+        snap.sites[site.id].pages[pg.id][strat] = {
+          performanceScore: Math.min(100, Math.max(10, rng(b.perf + t, 6, site.id + pg.id + strat))),
+          lcp: Math.max(500, rng(b.lcp * m * sm, 400, site.id + pg.id + strat + 'lcp')),
+          fcp: Math.max(300, rng(b.fcp * m * sm, 200, site.id + pg.id + strat + 'fcp')),
+          tti: Math.max(1000, rng(b.tti * m * sm, 800, site.id + pg.id + strat + 'tti')),
+          tbt: Math.max(0, rng(b.tbt * m * sm, 100, site.id + pg.id + strat + 'tbt')),
+          cls: Math.max(0, parseFloat((b.cls * m + (((seed(date+site.id+strat) % 20)/100) - 0.1)).toFixed(3))),
+          si: Math.max(500, rng(b.si * m * sm, 500, site.id + pg.id + strat + 'si')),
+        };
+      }
+    }
+  }
+  return snap;
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────────────
+
+function render() {
+  renderLegend();
+  renderScoreCards();
+  renderCharts();
+  renderMetricsTable();
+}
+
+function renderLegend() {
+  document.getElementById('overview-legend').innerHTML = SITES.map(s =>
+    `<div class="legend-item">
+      <div class="legend-dot" style="background:${s.color}"></div>
+      ${s.name}
+      ${s.isOwn ? '<span class="legend-own">o meu site</span>' : ''}
+    </div>`
+  ).join('');
+}
+
+function getMetric(siteId, page, strat, metric) {
+  return latestData?.sites?.[siteId]?.pages?.[page]?.[strat]?.[metric] ?? null;
+}
+
+function scoreColor(score) {
+  if (score >= 90) return 'var(--good)';
+  if (score >= 50) return 'var(--warn)';
+  return 'var(--bad)';
+}
+function scoreBadgeClass(score) {
+  if (score >= 90) return 'badge-good';
+  if (score >= 50) return 'badge-warn';
+  return 'badge-bad';
+}
+function lcpClass(ms) { return ms < 2500 ? 'val-good' : ms < 4000 ? 'val-warn' : 'val-bad'; }
+function clsClass(v) { return v < 0.1 ? 'val-good' : v < 0.25 ? 'val-warn' : 'val-bad'; }
+function ttiClass(ms) { return ms < 3800 ? 'val-good' : ms < 7300 ? 'val-warn' : 'val-bad'; }
+function fcpClass(ms) { return ms < 1800 ? 'val-good' : ms < 3000 ? 'val-warn' : 'val-bad'; }
+function tbtClass(ms) { return ms < 200 ? 'val-good' : ms < 600 ? 'val-warn' : 'val-bad'; }
+function fmtMs(v) { return v ? (v/1000).toFixed(1) + 's' : '—'; }
+function fmtCls(v) { return v != null ? v.toFixed(3) : '—'; }
+
+function renderScoreCards() {
+  if (!latestData) return;
+  const grid = document.getElementById('score-grid');
+  grid.innerHTML = SITES.map(site => {
+    const perf = getMetric(site.id, selectedPage, strategy, 'performanceScore');
+    const lcp  = getMetric(site.id, selectedPage, strategy, 'lcp');
+    const fcp  = getMetric(site.id, selectedPage, strategy, 'fcp');
+    const cls  = getMetric(site.id, selectedPage, strategy, 'cls');
+    if (perf == null) return '';
+
+    const arc = describeArc(32, 32, 26, -120, -120 + (perf / 100) * 240);
+    return `<div class="score-card${site.isOwn?' own-site':''}">
+      <div class="score-card-site" style="color:${site.color}">${site.name}${site.isOwn?' ← o meu':''}</div>
+      <div class="score-ring-wrap">
+        <svg class="score-ring" viewBox="0 0 64 64">
+          <path d="${describeArc(32,32,26,-120,120)}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5" stroke-linecap="round"/>
+          <path d="${arc}" fill="none" stroke="${scoreColor(perf)}" stroke-width="5" stroke-linecap="round"/>
+          <text x="32" y="37" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="14" font-weight="600" fill="${scoreColor(perf)}">${perf}</text>
+        </svg>
+        <div class="score-metrics">
+          <div class="score-metric-row"><span class="score-metric-label">LCP</span><span class="score-metric-val ${lcpClass(lcp)}">${fmtMs(lcp)}</span></div>
+          <div class="score-metric-row"><span class="score-metric-label">FCP</span><span class="score-metric-val ${fcpClass(fcp)}">${fmtMs(fcp)}</span></div>
+          <div class="score-metric-row"><span class="score-metric-label">CLS</span><span class="score-metric-val ${clsClass(cls)}">${fmtCls(cls)}</span></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function describeArc(cx, cy, r, startAngle, endAngle) {
+  const start = polarToCartesian(cx, cy, r, startAngle);
+  const end = polarToCartesian(cx, cy, r, endAngle);
+  const largeArc = (endAngle - startAngle) > 180 ? 1 : 0;
+  return `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArc} 1 ${end.x} ${end.y}`;
+}
+function polarToCartesian(cx, cy, r, angle) {
+  const a = (angle - 90) * Math.PI / 180;
+  return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
+}
+
+function renderCharts() {
+  if (!latestData) return;
+  const configs = [
+    { id: 'chart-lcp', metric: 'lcp',   fmt: v => v/1000, label: 's' },
+    { id: 'chart-cls', metric: 'cls',   fmt: v => v,      label: '' },
+    { id: 'chart-tti', metric: 'tti',   fmt: v => v/1000, label: 's' },
+    { id: 'chart-fcp', metric: 'fcp',   fmt: v => v/1000, label: 's' },
+  ];
+
+  configs.forEach(cfg => {
+    const vals = SITES.map(s => {
+      const v = getMetric(s.id, selectedPage, strategy, cfg.metric);
+      return v != null ? parseFloat(cfg.fmt(v).toFixed(3)) : 0;
+    });
+
+    if (chartInstances[cfg.id]) { chartInstances[cfg.id].destroy(); }
+    const ctx = document.getElementById(cfg.id).getContext('2d');
+    chartInstances[cfg.id] = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: SITES.map(s => s.name),
+        datasets: [{
+          data: vals,
+          backgroundColor: SITES.map(s => s.color + '99'),
+          borderColor: SITES.map(s => s.color),
+          borderWidth: 1.5,
+          borderRadius: 6,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: {
+          callbacks: { label: ctx => ctx.raw + (cfg.label) }
+        }},
+        scales: {
+          x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#8892a4', font: { family: 'IBM Plex Mono', size: 11 } } },
+          y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#8892a4', font: { family: 'IBM Plex Mono', size: 10 } } }
+        }
+      }
+    });
+  });
+}
+
+function renderMetricsTable() {
+  if (!latestData) return;
+  const body = document.getElementById('metrics-table-body');
+  body.innerHTML = SITES.map(site => {
+    const m = latestData.sites?.[site.id]?.pages?.[selectedPage]?.[strategy];
+    if (!m) return '';
+    return `<div class="mt-row">
+      <div class="mt-site-name">
+        <div class="site-color-bar" style="background:${site.color}"></div>
+        ${site.name}
+      </div>
+      <div class="mt-val"><span class="perf-score-badge ${scoreBadgeClass(m.performanceScore)}">${m.performanceScore}</span></div>
+      <div class="mt-val ${lcpClass(m.lcp)}">${fmtMs(m.lcp)}</div>
+      <div class="mt-val ${fcpClass(m.fcp)}">${fmtMs(m.fcp)}</div>
+      <div class="mt-val ${ttiClass(m.tti)}">${fmtMs(m.tti)}</div>
+      <div class="mt-val ${tbtClass(m.tbt)}">${m.tbt != null ? Math.round(m.tbt)+'ms' : '—'}</div>
+      <div class="mt-val ${clsClass(m.cls)}">${fmtCls(m.cls)}</div>
+      <div class="mt-val">${m.si ? fmtMs(m.si) : '—'}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderHistory() {
+  if (!historyData.length) return;
+  const metric = document.getElementById('history-metric').value;
+  const isLower = metric !== 'performanceScore';
+
+  const labels = historyData.map(d => d.date);
+  const datasets = SITES.map(site => ({
+    label: site.name,
+    data: historyData.map(d => {
+      const v = d.sites?.[site.id]?.pages?.[historyPage]?.[strategy]?.[metric];
+      if (v == null) return null;
+      if (metric === 'lcp' || metric === 'fcp' || metric === 'tti' || metric === 'tbt' || metric === 'si')
+        return parseFloat((v/1000).toFixed(2));
+      return parseFloat(v.toFixed ? v.toFixed(3) : v);
+    }),
+    borderColor: site.color,
+    backgroundColor: site.color + '20',
+    borderWidth: 2,
+    pointRadius: 3,
+    pointHoverRadius: 5,
+    tension: 0.3,
+    fill: site.isOwn,
+  }));
+
+  if (chartInstances['history']) chartInstances['history'].destroy();
+  const ctx = document.getElementById('chart-history').getContext('2d');
+  chartInstances['history'] = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#8892a4', font: { family: 'IBM Plex Mono', size: 11 }, boxWidth: 12, padding: 16 } },
+      },
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#8892a4', font: { family: 'IBM Plex Mono', size: 10 }, maxTicksLimit: 14 } },
+        y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#8892a4', font: { family: 'IBM Plex Mono', size: 10 } }, reverse: isLower }
+      }
+    }
+  });
+}
+
+function renderRanking() {
+  if (!latestData) return;
+  const metrics = ['performanceScore','lcp','fcp','tti','tbt','cls'];
+  const metricLabels = { performanceScore:'Performance Score', lcp:'LCP (Largest Contentful Paint)', fcp:'FCP (First Contentful Paint)', tti:'Time to Interactive', tbt:'Total Blocking Time', cls:'CLS (Layout Shift)' };
+  const higherBetter = { performanceScore: true };
+
+  const html = metrics.map(metric => {
+    const ranked = SITES.map(site => ({
+      ...site,
+      val: getMetric(site.id, selectedPage, strategy, metric)
+    })).filter(s => s.val != null)
+      .sort((a,b) => higherBetter[metric] ? b.val - a.val : a.val - b.val);
+
+    return `<div style="margin-bottom:24px">
+      <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:600;margin-bottom:10px;color:var(--text2)">${metricLabels[metric]}</div>
+      <div class="ranking-list">
+        ${ranked.map((s, i) => `
+          <div class="ranking-row" style="${s.isOwn ? 'border-color:rgba(230,57,70,0.25)' : ''}">
+            <div class="ranking-pos pos-${i+1}">${i+1}</div>
+            <div class="site-color-bar" style="background:${s.color};width:3px;height:24px;border-radius:2px;flex-shrink:0"></div>
+            <div class="ranking-name">${s.name} ${s.isOwn ? '<span class="ranking-own-tag">o meu site</span>' : ''}</div>
+            <div class="mt-val" style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600">
+              ${metric === 'performanceScore' ? `<span class="perf-score-badge ${scoreBadgeClass(s.val)}">${s.val}</span>` :
+                metric === 'cls' ? fmtCls(s.val) : fmtMs(s.val)}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('ranking-content').innerHTML = `
+    <div class="page-filter" style="margin-bottom:20px" id="ranking-page-filter2"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">${html}</div>
+  `;
+}
+
+// ─── CONFIG ───────────────────────────────────────────────────────────────
+
+function openSetup() { document.getElementById('modal-setup').classList.add('open'); }
+function closeSetup() { document.getElementById('modal-setup').classList.remove('open'); }
+document.getElementById('modal-setup').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-setup')) closeSetup();
+});
+
+function saveConfig() {
+  repoUrl = document.getElementById('repo-url').value.trim();
+  if (!repoUrl) { alert('Insere o URL do repositório.'); return; }
+  localStorage.setItem('bench_repo_url', repoUrl);
+  closeSetup();
+  fetchLatest();
+}
+</script>
+</body>
+</html>
