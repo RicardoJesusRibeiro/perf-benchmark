@@ -1,0 +1,32 @@
+name: Daily Performance Benchmark
+
+on:
+  schedule:
+    # Corre todos os dias às 07:00 UTC (08:00 Lisboa, hora de verão)
+    - cron: '0 7 * * *'
+  workflow_dispatch:
+    # Permite correr manualmente a qualquer momento
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run PageSpeed benchmark
+        env:
+          PAGESPEED_API_KEY: ${{ secrets.PAGESPEED_API_KEY }}
+        run: |
+          node scripts/run-benchmark.js
+
+      - name: Commit results
+        run: |
+          git config --global user.name "Benchmark Bot"
+          git config --global user.email "benchmark@github-actions"
+          git add data/
+          git diff --staged --quiet || git commit -m "📊 Benchmark $(date +'%Y-%m-%d')"
+          git push
