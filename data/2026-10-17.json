@@ -1,0 +1,588 @@
+{
+  "date": "2026-10-17",
+  "timestamp": "2026-10-17T11:19:58.222Z",
+  "sites": {
+    "continente": {
+      "name": "Continente",
+      "pages": {
+        "homepage": {
+          "mobile": {
+            "performanceScore": 19,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 6001.014491246849,
+            "fid": 584,
+            "cls": 0.3089493942436257,
+            "fcp": 3751.0087710178314,
+            "tti": 44668.871375111936,
+            "tbt": 1827,
+            "si": 12414.782539263302,
+            "lcpField": 2753,
+            "fidField": null,
+            "clsField": 31,
+            "fcpField": 1959
+          },
+          "desktop": {
+            "performanceScore": 51,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 1981.009782414614,
+            "fid": 454,
+            "cls": 0.0843804350264863,
+            "fcp": 721.0032951291332,
+            "tti": 8312.606505044492,
+            "tbt": 1381.5769438069738,
+            "si": 3392.9047759162504,
+            "lcpField": 2203,
+            "fidField": null,
+            "clsField": 3,
+            "fcpField": 1510
+          }
+        },
+        "category": {
+          "mobile": {
+            "performanceScore": 17,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 7887.246144962954,
+            "fid": 627,
+            "cls": 0.2247873633049818,
+            "fcp": 4284.676333373215,
+            "tti": 35064.17497312222,
+            "tbt": 4528.5,
+            "si": 11914.232435479407,
+            "lcpField": 3196,
+            "fidField": null,
+            "clsField": 44,
+            "fcpField": 1939
+          },
+          "desktop": {
+            "performanceScore": 26,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 3104.543265836721,
+            "fid": 458,
+            "cls": 0.32184766906308765,
+            "fcp": 1022.9285772977707,
+            "tti": 7865.839189585408,
+            "tbt": 2181,
+            "si": 4457.410005369443,
+            "lcpField": 3471,
+            "fidField": null,
+            "clsField": 37,
+            "fcpField": 2301
+          }
+        },
+        "pdp": {
+          "mobile": {
+            "performanceScore": 14,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 17331.888533588695,
+            "fid": 266,
+            "cls": 0.3114002194972379,
+            "fcp": 9955.587617739628,
+            "tti": 38840.29823702346,
+            "tbt": 1455.652252460317,
+            "si": 13180.772942573312,
+            "lcpField": 3015,
+            "fidField": null,
+            "clsField": 26,
+            "fcpField": 1653
+          },
+          "desktop": {
+            "performanceScore": 36,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 4197.918644536076,
+            "fid": 201,
+            "cls": 0.06110436405789858,
+            "fcp": 1951.4380689918423,
+            "tti": 7532.316596522058,
+            "tbt": 741.2579214080203,
+            "si": 3946.986610943089,
+            "lcpField": 2496,
+            "fidField": null,
+            "clsField": 15,
+            "fcpField": 1443
+          }
+        },
+        "cart": {
+          "mobile": {
+            "performanceScore": 11,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 15676.848345829163,
+            "fid": 366,
+            "cls": 0.30575834077893654,
+            "fcp": 10264.75142478896,
+            "tti": 38860.77203096598,
+            "tbt": 2181.5,
+            "si": 13930.42868204055,
+            "lcpField": 3015,
+            "fidField": null,
+            "clsField": 26,
+            "fcpField": 1653
+          },
+          "desktop": {
+            "performanceScore": 33,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 4035.922161573082,
+            "fid": 185,
+            "cls": 0.07673856502539177,
+            "fcp": 1944.5668918113447,
+            "tti": 7862.170797998924,
+            "tbt": 1111.2946982358994,
+            "si": 4123.321665861992,
+            "lcpField": 2496,
+            "fidField": null,
+            "clsField": 15,
+            "fcpField": 1443
+          }
+        }
+      }
+    },
+    "auchan": {
+      "name": "Auchan",
+      "pages": {
+        "homepage": {
+          "mobile": {
+            "performanceScore": 60,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 11101.02961445725,
+            "fid": 85,
+            "cls": 0.09452303314936208,
+            "fcp": 2701.006580990499,
+            "tti": 15225.540699313122,
+            "tbt": 125.00000000000182,
+            "si": 7309.5328706310665,
+            "lcpField": 3621,
+            "fidField": null,
+            "clsField": 1,
+            "fcpField": 2442
+          },
+          "desktop": {
+            "performanceScore": 41,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 4032.982328074806,
+            "fid": 274,
+            "cls": 0.06305625767217227,
+            "fcp": 666.0116937282596,
+            "tti": 4367.915217333147,
+            "tbt": 856.5000000000009,
+            "si": 5956.5827075934385,
+            "lcpField": 3635,
+            "fidField": null,
+            "clsField": 2,
+            "fcpField": 2501
+          }
+        },
+        "category": {
+          "mobile": {
+            "performanceScore": 52,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 9977.006063762514,
+            "fid": 154,
+            "cls": null,
+            "fcp": 3451.32755564361,
+            "tti": 10255.013862706412,
+            "tbt": 452,
+            "si": 5829.8185835975455,
+            "lcpField": 2361,
+            "fidField": null,
+            "clsField": 1,
+            "fcpField": 1782
+          },
+          "desktop": {
+            "performanceScore": 97,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 581.1179217972041,
+            "fid": 90,
+            "cls": 0.0029028095073305154,
+            "fcp": 515.1487379848176,
+            "tti": 2039.4433859574874,
+            "tbt": 114,
+            "si": 1337.805199523393,
+            "lcpField": 2519,
+            "fidField": null,
+            "clsField": 7,
+            "fcpField": 2156
+          }
+        },
+        "pdp": {
+          "mobile": {
+            "performanceScore": 58,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 9901.371494372874,
+            "fid": 124,
+            "cls": null,
+            "fcp": 3451.1218965911003,
+            "tti": 10150.377298972457,
+            "tbt": 243,
+            "si": 6238.385249349503,
+            "lcpField": 2361,
+            "fidField": null,
+            "clsField": 1,
+            "fcpField": 1782
+          },
+          "desktop": {
+            "performanceScore": 91,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 781.1400828456785,
+            "fid": 107,
+            "cls": 0.00302442291386305,
+            "fcp": 681.1200710105818,
+            "tti": 2021.1342461820068,
+            "tbt": 196.99937269813563,
+            "si": 1759.4447386713105,
+            "lcpField": 2519,
+            "fidField": null,
+            "clsField": 7,
+            "fcpField": 2156
+          }
+        },
+        "cart": {
+          "mobile": {
+            "performanceScore": 62,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 8851.452006479783,
+            "fid": 142,
+            "cls": 0.0008929420325729187,
+            "fcp": 2851.1348089501116,
+            "tti": 10153.51544598572,
+            "tbt": 295,
+            "si": 4589.013810656401,
+            "lcpField": 2361,
+            "fidField": null,
+            "clsField": 1,
+            "fcpField": 1782
+          },
+          "desktop": {
+            "performanceScore": 98,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 821.1081920474776,
+            "fid": 66,
+            "cls": 0.006153261686100598,
+            "fcp": 721.0935715005212,
+            "tti": 1981.2690180639984,
+            "tbt": 29,
+            "si": 1281.62696993833,
+            "lcpField": 2519,
+            "fidField": null,
+            "clsField": 7,
+            "fcpField": 2156
+          }
+        }
+      }
+    },
+    "pingodoce": {
+      "name": "Pingo Doce",
+      "pages": {
+        "homepage": {
+          "mobile": {
+            "performanceScore": 32,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 11551.03526549923,
+            "fid": 238.9999999999991,
+            "cls": 0.3395100684747042,
+            "fcp": 2883.7047363378488,
+            "tti": 19980.168863349365,
+            "tbt": 464.0000000000009,
+            "si": 11763.507150485737,
+            "lcpField": 2948,
+            "fidField": null,
+            "clsField": 3,
+            "fcpField": 1916
+          },
+          "desktop": {
+            "performanceScore": 47,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 3281.0944952613495,
+            "fid": 242.9999999999991,
+            "cls": 0.014255772979569955,
+            "fcp": 681.0177178615029,
+            "tti": 5094.218314844774,
+            "tbt": 688.9999999999993,
+            "si": 4004.435180341162,
+            "lcpField": 2430,
+            "fidField": null,
+            "clsField": 31,
+            "fcpField": 1440
+          }
+        },
+        "category": {
+          "mobile": {
+            "performanceScore": 89,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 2666.5577635539266,
+            "fid": 119,
+            "cls": 0.000647729136291728,
+            "fcp": 1980.6538967156894,
+            "tti": 13699.20317470413,
+            "tbt": 76,
+            "si": 6252.5713002648745,
+            "lcpField": 2313,
+            "fidField": null,
+            "clsField": 3,
+            "fcpField": 1568
+          },
+          "desktop": {
+            "performanceScore": 93,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 1211.0495523520085,
+            "fid": 107,
+            "cls": 0.0005657475131939726,
+            "fcp": 775.9769274826756,
+            "tti": 2331.566392078848,
+            "tbt": 105.5,
+            "si": 1813.324326451898,
+            "lcpField": 1957,
+            "fidField": null,
+            "clsField": 12,
+            "fcpField": 1407
+          }
+        },
+        "pdp": {
+          "mobile": {
+            "performanceScore": 78,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 2101.0653095125735,
+            "fid": 319,
+            "cls": 0.009112463695383037,
+            "fcp": 1801.0544245938113,
+            "tti": 9531.589052675108,
+            "tbt": 493,
+            "si": 8030.3279941418095,
+            "lcpField": 2313,
+            "fidField": null,
+            "clsField": 3,
+            "fcpField": 1568
+          },
+          "desktop": {
+            "performanceScore": 70,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 764.0943088176384,
+            "fid": 261.0000000000002,
+            "cls": null,
+            "fcp": 401.05588670674865,
+            "tti": 2440.8124719973316,
+            "tbt": 524.9231557782207,
+            "si": 3159.1750745872905,
+            "lcpField": 1957,
+            "fidField": null,
+            "clsField": 12,
+            "fcpField": 1407
+          }
+        },
+        "cart": {
+          "mobile": {
+            "performanceScore": 90,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 2101.0540994493676,
+            "fid": 151,
+            "cls": 0.010802723232748876,
+            "fcp": 1820.045082874473,
+            "tti": 8752.650576800741,
+            "tbt": 137.5,
+            "si": 7059.08705436133,
+            "lcpField": 2313,
+            "fidField": null,
+            "clsField": 3,
+            "fcpField": 1568
+          },
+          "desktop": {
+            "performanceScore": 71,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 697.0611248293371,
+            "fid": 274.0000000000002,
+            "cls": 0.003810053354893761,
+            "fcp": 401.0488998634696,
+            "tti": 2276.8744499317354,
+            "tbt": 492.4999999999998,
+            "si": 3150.66824458099,
+            "lcpField": 1957,
+            "fidField": null,
+            "clsField": 12,
+            "fcpField": 1407
+          }
+        }
+      }
+    },
+    "elcorteingles": {
+      "name": "El Corte Inglés",
+      "pages": {
+        "homepage": {
+          "mobile": {
+            "performanceScore": 26,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 41027.02515861034,
+            "fid": 458,
+            "cls": 0.07168894289185905,
+            "fcp": 12302.008386199934,
+            "tti": 43129.12636289569,
+            "tbt": 2205.5,
+            "si": 21445.4382596018,
+            "lcpField": 2753,
+            "fidField": null,
+            "clsField": 9,
+            "fcpField": 1920
+          },
+          "desktop": {
+            "performanceScore": 33,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 3322.0173188735635,
+            "fid": 910.0000000000009,
+            "cls": 0.052790379658057524,
+            "fcp": 2202.012661410434,
+            "tti": 9988.547322400329,
+            "tbt": 3053.502906644654,
+            "si": 7332.654218805319,
+            "lcpField": 2194,
+            "fidField": null,
+            "clsField": 35,
+            "fcpField": 1262
+          }
+        },
+        "category": {
+          "mobile": {
+            "performanceScore": 12,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 20128.580998047328,
+            "fid": 657,
+            "cls": 0.2926092785042424,
+            "fcp": 8578.53179210591,
+            "tti": 29988.93232204274,
+            "tbt": 2977,
+            "si": 11202.226474942012,
+            "lcpField": 1956,
+            "fidField": null,
+            "clsField": 11,
+            "fcpField": 1790
+          },
+          "desktop": {
+            "performanceScore": 9,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 5425.658267647561,
+            "fid": 311,
+            "cls": 1.1384862303440921,
+            "fcp": 1945.5484093320918,
+            "tti": 6292.803427863359,
+            "tbt": 934.7892552214478,
+            "si": 3128.818984108944,
+            "lcpField": 1416,
+            "fidField": null,
+            "clsField": 10,
+            "fcpField": 1210
+          }
+        },
+        "pdp": {
+          "mobile": {
+            "performanceScore": 6,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 29172.174904493593,
+            "fid": 387,
+            "cls": 1.2444802851719663,
+            "fcp": 9822.0497187654,
+            "tti": 30609.611671779603,
+            "tbt": 1345,
+            "si": 10515.9383462113,
+            "lcpField": 3695,
+            "fidField": null,
+            "clsField": 164,
+            "fcpField": 3134
+          },
+          "desktop": {
+            "error": "Lighthouse returned error: Something went wrong."
+          }
+        },
+        "cart": {
+          "mobile": {
+            "performanceScore": 39,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 5706.006535494658,
+            "fid": 588,
+            "cls": 0.01797977541338238,
+            "fcp": 4506.005799122569,
+            "tti": 30005.92070970071,
+            "tbt": 1090.5,
+            "si": 9873.242590050446,
+            "lcpField": 1956,
+            "fidField": null,
+            "clsField": 11,
+            "fcpField": 1790
+          },
+          "desktop": {
+            "performanceScore": 46,
+            "accessibilityScore": 0,
+            "seoScore": 0,
+            "bestPracticesScore": 0,
+            "lcp": 2127.009957886693,
+            "fid": 634,
+            "cls": 0.004435269921682286,
+            "fcp": 1767.0099578866927,
+            "tti": 5783.79218721317,
+            "tbt": 1472.9999999999995,
+            "si": 3253.1095146669304,
+            "lcpField": 1416,
+            "fidField": null,
+            "clsField": 10,
+            "fcpField": 1210
+          }
+        }
+      }
+    }
+  }
+}
